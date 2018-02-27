@@ -10,10 +10,10 @@ class UserLookupManager(models.Manager):
     def filter_by_user(self, user):
         """All filters that should be displayed to a user (by users/group)"""
 
-        if hasattr(user, 'groups'):
+        try:
             return self.filter(Q(users=user) | Q(groups__in=user.groups.all()))
-        return self.filter(Q(users=user))
-
+        except AttributeError:
+            return self.filter(Q(users=user))
 
 class AdvancedFilter(models.Model):
     class Meta:
